@@ -1,16 +1,14 @@
 package de.code2code.Controller;
 
+import de.code2code.Interface.IDataSave;
 import de.code2code.Model.Todo;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import de.code2code.StaticDataSave;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  * Created by Jan Koschke on 17.10.2016.
@@ -21,14 +19,30 @@ public class TodoController {
 
     @RequestMapping(method = GET, path = "/todo")
     public List<Todo> getTodos() {
-        ArrayList<Todo> l = new ArrayList<>();
-        l.add(new Todo(new Date(), "test", false));
-        return l;
+        IDataSave dataSave = new StaticDataSave();
+        return dataSave.getTodos();
     }
 
     @RequestMapping(method = POST, path = "/todo")
-    public void addTodo(@RequestBody TodoController todo) {
-        System.out.println(todo);
+    public void addTodo(@RequestBody Todo todo) {
+        IDataSave dataSave = new StaticDataSave();
+        if (todo.getCreated_at() == null)
+            todo.setCreated_at(new Date());
+
+        dataSave.addTodo(todo);
     }
 
+    @RequestMapping(method = PUT, path = "/todo")
+    public void changeTodo(@RequestBody Todo todo) {
+        IDataSave dataSave = new StaticDataSave();
+        dataSave.updateTodo(todo);
+    }
+
+    @RequestMapping(method = DELETE, path = "/todo/{id}")
+    public void deleteTodo(@PathVariable("id") int id) {
+        if (id > 0) {
+            IDataSave dataSave = new StaticDataSave();
+            dataSave.deleteTodo(id);
+        }
+    }
 }

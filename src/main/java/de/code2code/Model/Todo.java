@@ -1,23 +1,30 @@
 package de.code2code.Model;
 
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by Jan Koschke on 17.10.2016.
  */
 public class Todo {
 
+    private static final AtomicLong counter = new AtomicLong();
+    private final long id = counter.incrementAndGet();
     private Date created_at;
     private String text;
     private boolean status = false;
 
-    public Todo(){
+    public Todo() {
     }
 
-    public Todo(Date created_at, String text, boolean status) {
-        this.created_at = created_at;
+    public Todo(String text, boolean status) {
+        this.created_at = new Date();
         this.text = text;
         this.status = status;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public Date getCreated_at() {
@@ -25,7 +32,7 @@ public class Todo {
     }
 
     public void setCreated_at(Date created_at) {
-        this.created_at = created_at;
+            this.created_at = created_at;
     }
 
     public String getText() {
